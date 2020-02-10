@@ -95,7 +95,8 @@ class MCSSelectionEnv(gym.Env):
         # Initialize the random variables
         snr_dB = 20.0 + 5.0 * itpp.random.randn()
 #        snr_dB = itpp.random.randi(5, 25)
-        self.ue_noise_variance = itpp.math.inv_dB(-1.0 * float(snr_dB))
+        #self.ue_noise_variance = itpp.math.inv_dB(-1.0 * float(snr_dB))
+        self.ue_noise_variance = 10 ** ( -0.1 * float(snr_dB) )  # Inverse dB
 
         # Setup the channel
         self.channel = setup_fading_channel(self.channel_spec, self.ue_relative_speed)
@@ -112,7 +113,8 @@ class MCSSelectionEnv(gym.Env):
         if self.intercell_interference:
             #if ((int(self.subframe_index / 15)) % 3) == 0:
             if itpp.randu() < 0.2:
-                interf_variance = itpp.math.inv_dB(-1.0 * float(sir_dB))
+                #interf_variance = itpp.math.inv_dB(-1.0 * float(sir_dB))
+                interf_variance = 10 ** (-0.1 * float(sir_dB))  # Inverse dB
                 interf_flag = 1
             else:
                 interf_variance = 0.0
