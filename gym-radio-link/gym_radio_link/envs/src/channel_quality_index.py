@@ -89,11 +89,14 @@ def calculate_wideband_channel_quality_index(channel_coefficients, noise_varianc
     
     eesm_beta = [0.1, 0.1, 0.2, 0.8, 1.40, 1.90, 2.2, 2.90, 3.40, 3.2, 3.1, 4.5, 3.90, 4.0, 3.50, 4.3]
 
-    snr_per_subcarrier = itpp.math.pow(itpp.math.abs(channel_coefficients), 2) * (1.0 / noise_variance)
+#    snr_per_subcarrier = itpp.math.pow(itpp.math.abs(channel_coefficients), 2) * (1.0 / noise_variance)
    
     for i in range(nrof_cqi):
-        v = itpp.math.exp(-1.0 * snr_per_subcarrier / eesm_beta[i])
-        eesm_value = -1.0 * eesm_beta[i] * itpp.math.log(itpp.stat.mean(v))  
+        v = 0.0
+        for j in range(channel_coefficients.length()):
+           v += itpp.math.exp( -1.0 * ( np.absolute( channel_coefficients[j] ) ** 2.0 / noise_variance ) / eesm_beta[i] ) 
+
+        eesm_value = -1.0 * eesm_beta[i] * itpp.math.log( v / channel_coefficients.length( ) )  
         eesm_dB[i] = itpp.math.dB(eesm_value)
 
     # Find the largest CQI that has BLER less than the BLER target

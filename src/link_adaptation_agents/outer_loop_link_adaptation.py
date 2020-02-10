@@ -51,4 +51,10 @@ class OuterLoopLinkAdaptation():
     
         adjusted_sinr = estimated_sinr - self.sinr_offset
     
-        return 1.0 - lib.determine_bler_at_sinr(self.awgn_data, adjusted_sinr).to_numpy_ndarray()    
+        bler = lib.determine_bler_at_sinr(self.awgn_data, adjusted_sinr)
+        
+        success_rate = []
+        for i in range( bler.length( ) ):
+            success_rate.append( 1.0 - bler[ i ] )
+        
+        return np.array( success_rate )    
